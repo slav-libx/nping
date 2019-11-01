@@ -1,0 +1,46 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = Single
+  Caption = 'Ping Nodes'
+  ClientHeight = 256
+  ClientWidth = 452
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  DesignerMasterStyle = 0
+  object ListBox: TListBox
+    Anchors = [akLeft, akTop, akRight, akBottom]
+    Position.X = 8.000000000000000000
+    Position.Y = 8.000000000000000000
+    Size.Width = 433.000000000000000000
+    Size.Height = 200.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    DisableFocusEffect = True
+    Items.Strings = (
+      '185.182.193.15'
+      '185.182.193.16'
+      '185.182.193.17'
+      '190.2.146.126'
+      '190.2.146.129'
+      '190.2.146.156')
+    DefaultItemStyles.ItemStyle = ''
+    DefaultItemStyles.GroupHeaderStyle = ''
+    DefaultItemStyles.GroupFooterStyle = ''
+    Viewport.Width = 429.000000000000000000
+    Viewport.Height = 196.000000000000000000
+  end
+  object Button1: TButton
+    Anchors = [akRight, akBottom]
+    Position.X = 336.000000000000000000
+    Position.Y = 216.000000000000000000
+    Size.Width = 105.000000000000000000
+    Size.Height = 33.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    Text = 'Ping'
+    OnClick = Button1Click
+  end
+end
