@@ -1,0 +1,51 @@
+object ItemFrame: TItemFrame
+  Align = Contents
+  HitTest = False
+  Size.Width = 665.000000000000000000
+  Size.Height = 28.000000000000000000
+  Size.PlatformDefault = False
+  object Label1: TLabel
+    Align = Left
+    Margins.Left = 4.000000000000000000
+    Position.X = 4.000000000000000000
+    Size.Width = 113.000000000000000000
+    Size.Height = 28.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Address'
+    TabOrder = 3
+  end
+  object Label2: TLabel
+    Align = Left
+    AutoSize = True
+    StyledSettings = [Family, Size, Style]
+    Margins.Right = 6.000000000000000000
+    Position.X = 117.000000000000000000
+    Size.Width = 17.000000000000000000
+    Size.Height = 28.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.FontColor = claGreen
+    TextSettings.WordWrap = False
+    Text = 'OK'
+    TabOrder = 2
+  end
+  object Label3: TLabel
+    Align = Client
+    StyledSettings = [Family, Size, Style]
+    Size.Width = 525.000000000000000000
+    Size.Height = 28.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.FontColor = claRed
+    TextSettings.VertAlign = Leading
+    Text = 'Exception'
+    TabOrder = 1
+  end
+  object Label4: TLabel
+    Align = Client
+    Size.Width = 525.000000000000000000
+    Size.Height = 28.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.WordWrap = False
+    Text = 'Information'
+    TabOrder = 0
+  end
+end

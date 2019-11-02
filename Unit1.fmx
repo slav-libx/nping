@@ -2,10 +2,10 @@ object Form1: TForm1
   Left = 0
   Top = 0
   BorderIcons = [biSystemMenu, biMinimize]
-  BorderStyle = Single
-  Caption = 'Ping Nodes'
-  ClientHeight = 256
-  ClientWidth = 452
+  Caption = 'Nodes Monitor'
+  ClientHeight = 475
+  ClientWidth = 358
+  Position = ScreenCenter
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
@@ -14,33 +14,48 @@ object Form1: TForm1
     Anchors = [akLeft, akTop, akRight, akBottom]
     Position.X = 8.000000000000000000
     Position.Y = 8.000000000000000000
-    Size.Width = 433.000000000000000000
-    Size.Height = 200.000000000000000000
+    Size.Width = 341.000000000000000000
+    Size.Height = 419.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 0
     DisableFocusEffect = True
-    Items.Strings = (
-      '185.182.193.15'
-      '185.182.193.16'
-      '185.182.193.17'
-      '190.2.146.126'
-      '190.2.146.129'
-      '190.2.146.156')
     DefaultItemStyles.ItemStyle = ''
     DefaultItemStyles.GroupHeaderStyle = ''
     DefaultItemStyles.GroupFooterStyle = ''
-    Viewport.Width = 429.000000000000000000
-    Viewport.Height = 196.000000000000000000
+    Viewport.Width = 337.000000000000000000
+    Viewport.Height = 415.000000000000000000
   end
   object Button1: TButton
     Anchors = [akRight, akBottom]
-    Position.X = 336.000000000000000000
-    Position.Y = 216.000000000000000000
+    Position.X = 244.000000000000000000
+    Position.Y = 428.000000000000000000
     Size.Width = 105.000000000000000000
-    Size.Height = 33.000000000000000000
+    Size.Height = 40.000000000000000000
     Size.PlatformDefault = False
-    TabOrder = 1
+    TabOrder = 3
     Text = 'Ping'
     OnClick = Button1Click
+  end
+  object Button2: TButton
+    Anchors = [akLeft, akBottom]
+    Position.X = 8.000000000000000000
+    Position.Y = 428.000000000000000000
+    Size.Width = 105.000000000000000000
+    Size.Height = 40.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+    Text = 'Add'
+    OnClick = Button2Click
+  end
+  object Button3: TButton
+    Anchors = [akLeft, akBottom]
+    Position.X = 113.000000000000000000
+    Position.Y = 428.000000000000000000
+    Size.Width = 105.000000000000000000
+    Size.Height = 40.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    Text = 'Remove'
+    OnClick = Button3Click
   end
 end
