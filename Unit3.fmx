@@ -1,0 +1,50 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 700
+  ClientWidth = 767
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  DesignerMasterStyle = 0
+  object VertScrollBox1: TVertScrollBox
+    Anchors = [akLeft, akTop, akRight, akBottom]
+    Position.X = 8.000000000000000000
+    Position.Y = 8.000000000000000000
+    Size.Width = 753.000000000000000000
+    Size.Height = 649.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    Viewport.Width = 753.000000000000000000
+    Viewport.Height = 649.000000000000000000
+    object Layout1: TLayout
+      Align = Top
+      Size.Width = 753.000000000000000000
+      Size.Height = 201.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      OnPaint = Layout1Paint
+    end
+  end
+  object Button1: TButton
+    Anchors = [akRight, akBottom]
+    Position.X = 680.000000000000000000
+    Position.Y = 672.000000000000000000
+    TabOrder = 1
+    Text = 'Button1'
+    OnClick = Button1Click
+  end
+  object Label1: TLabel
+    Anchors = [akLeft, akBottom]
+    Position.X = 8.000000000000000000
+    Position.Y = 672.000000000000000000
+    Text = 'Label1'
+    TabOrder = 3
+  end
+  object Timer1: TTimer
+    OnTimer = Timer1Timer
+    Left = 528
+    Top = 208
+  end
+end
