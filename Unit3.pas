@@ -20,7 +20,7 @@ uses
   System.Generics.Collections,
   UCustomMemoryStream,
   Net.Socket,
-  Net.StreamSocket;
+  Net.StreamSocket, FMX.Objects;
 
 type
   TContent = record
@@ -52,6 +52,7 @@ type
     Timer1: TTimer;
     Layout1: TLayout;
     Label1: TLabel;
+    Rectangle1: TRectangle;
     procedure Button1Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure Layout1Paint(Sender: TObject; Canvas: TCanvas;
@@ -61,6 +62,7 @@ type
     procedure DoNeedUpdate;
     procedure AddConnection(const Address: string);
     function GetConnection(Socket: TObject): TConnection;
+    function CompareConnections: Boolean;
     procedure OnClientConnect(Sender: TObject);
     procedure OnClientReceived(Sender: TObject);
     procedure OnClientClose(Sender: TObject);
@@ -117,15 +119,29 @@ begin
   Client.Connect(Address,5555);
 end;
 
+function TForm1.CompareConnections: Boolean;
+var S: string;
+begin
+  Result:=True;
+  if Connections.Count>0 then S:=Connections[0].Content.ContentText;
+  for var C in Connections do
+  if C.Content.ContentText<>S then Exit(False);
+end;
+
 procedure TForm1.DoNeedUpdate;
 begin
-  //Layout1.Repaint;
+  Layout1.Repaint;
+  for var C in Connections do
+  if CompareConnections then
+    Rectangle1.Fill.Color:=claGreen
+  else
+    Rectangle1.Fill.Color:=claRed;
 end;
 
 procedure TForm1.Button1Click(Sender: TObject);
 var I: Integer;
 begin
-  for I:=0 to 1000 do AddConnection('185.182.193.15');
+  for I:=0 to 900 do AddConnection('190.2.154.76');//  '185.182.193.15');
   Layout1.Height:=Connections.Count*20;
   Label1.Text:=Connections.Count.ToString;
 end;
@@ -158,10 +174,6 @@ begin
   Connection.State:=None;
 
   Connections.Add(Connection);
-
-  Connection.Connect;
-
-  DoNeedUpdate;
 
 end;
 
@@ -259,7 +271,7 @@ end;
 procedure TForm1.Timer1Timer(Sender: TObject);
 begin
   for var C in Connections do
-  if C.State=Aborted then C.Connect;
+  if (C.State<>Connecting) and not C.Client.Connected then C.Connect;
 end;
 
 end.
