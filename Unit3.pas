@@ -141,7 +141,8 @@ end;
 procedure TForm1.Button1Click(Sender: TObject);
 var I: Integer;
 begin
-  for I:=0 to 900 do AddConnection('190.2.154.76');//  '185.182.193.15');
+  //for I:=0 to 200 do AddConnection('185.182.193.15');
+  for I:=0 to 200 do AddConnection('190.2.154.76');
   Layout1.Height:=Connections.Count*20;
   Label1.Text:=Connections.Count.ToString;
 end;
