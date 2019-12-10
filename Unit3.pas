@@ -20,7 +20,7 @@ uses
   System.Generics.Collections,
   UCustomMemoryStream,
   Net.Socket,
-  Net.StreamSocket, FMX.Objects;
+  Net.StreamSocket, FMX.Objects, FMX.Edit, FMX.ComboEdit;
 
 type
   TContent = record
@@ -38,6 +38,7 @@ type
     Client: TStreamSocket;
     ExceptionText: string;
     Address: string;
+    NodePort: Word;
     NodeServer: string;
     Content: TContent;
     constructor Create;
@@ -53,6 +54,9 @@ type
     Layout1: TLayout;
     Label1: TLabel;
     Rectangle1: TRectangle;
+    ComboEdit1: TComboEdit;
+    Edit1: TEdit;
+    Edit2: TEdit;
     procedure Button1Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure Layout1Paint(Sender: TObject; Canvas: TCanvas;
@@ -116,7 +120,7 @@ begin
   State:=Connecting;
   ExceptionText:='';
   NodeServer:='';
-  Client.Connect(Address,5555);
+  Client.Connect(Address,NodePort);
 end;
 
 function TForm1.CompareConnections: Boolean;
@@ -141,8 +145,8 @@ end;
 procedure TForm1.Button1Click(Sender: TObject);
 var I: Integer;
 begin
-  //for I:=0 to 200 do AddConnection('185.182.193.15');
-  for I:=0 to 200 do AddConnection('190.2.154.76');
+  //for I:=0 to 200 do AddConnection('185.182.193.15'); '190.2.154.76'
+  for I:=0 to StrToInt(Edit1.Text) do AddConnection(ComboEdit1.Text);
   Layout1.Height:=Connections.Count*20;
   Label1.Text:=Connections.Count.ToString;
 end;
@@ -167,6 +171,7 @@ begin
 
   Connection:=TConnection.Create;
   Connection.Address:=Address;
+  Connection.NodePort:=StrToInt(Edit2.Text);
   Connection.Client.OnConnect:=OnClientConnect;
   Connection.Client.OnReceived:=OnClientReceived;
   Connection.Client.OnClose:=OnClientClose;

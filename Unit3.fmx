@@ -2,8 +2,8 @@ object Form1: TForm1
   Left = 0
   Top = 0
   Caption = 'Form1'
-  ClientHeight = 700
-  ClientWidth = 338
+  ClientHeight = 555
+  ClientWidth = 432
   Position = ScreenCenter
   FormFactor.Width = 320
   FormFactor.Height = 480
@@ -13,15 +13,15 @@ object Form1: TForm1
     Anchors = [akLeft, akTop, akRight, akBottom]
     Position.X = 8.000000000000000000
     Position.Y = 8.000000000000000000
-    Size.Width = 324.000000000000000000
-    Size.Height = 649.000000000000000000
+    Size.Width = 418.000000000000000000
+    Size.Height = 504.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 0
-    Viewport.Width = 324.000000000000000000
-    Viewport.Height = 649.000000000000000000
+    Viewport.Width = 418.000000000000000000
+    Viewport.Height = 504.000000000000000000
     object Layout1: TLayout
       Align = Top
-      Size.Width = 324.000000000000000000
+      Size.Width = 418.000000000000000000
       Size.Height = 201.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 0
@@ -30,8 +30,8 @@ object Form1: TForm1
   end
   object Button1: TButton
     Anchors = [akRight, akBottom]
-    Position.X = 251.000000000000000000
-    Position.Y = 672.000000000000000000
+    Position.X = 345.000000000000000000
+    Position.Y = 525.000000000000000000
     TabOrder = 1
     Text = 'Button1'
     OnClick = Button1Click
@@ -39,7 +39,7 @@ object Form1: TForm1
   object Label1: TLabel
     Anchors = [akLeft, akBottom]
     Position.X = 32.000000000000000000
-    Position.Y = 672.000000000000000000
+    Position.Y = 527.000000000000000000
     Text = 'Label1'
     TabOrder = 3
   end
@@ -49,11 +49,52 @@ object Form1: TForm1
     Top = 112
   end
   object Rectangle1: TRectangle
+    Anchors = [akLeft, akBottom]
     Position.X = 8.000000000000000000
-    Position.Y = 672.000000000000000000
+    Position.Y = 527.000000000000000000
     Size.Width = 17.000000000000000000
     Size.Height = 17.000000000000000000
     Size.PlatformDefault = False
     Stroke.Color = claDarkgray
+  end
+  object ComboEdit1: TComboEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    Anchors = [akLeft, akBottom]
+    TabOrder = 5
+    ItemHeight = 19.000000000000000000
+    Items.Strings = (
+      '185.182.193.15'
+      '190.2.154.76'
+      '127.0.0.1'
+      '192.168.0.106')
+    ItemIndex = 0
+    Text = '185.182.193.15'
+    Position.X = 88.000000000000000000
+    Position.Y = 524.000000000000000000
+    Size.Width = 137.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+  end
+  object Edit1: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 6
+    Text = '200'
+    Position.X = 286.000000000000000000
+    Position.Y = 524.000000000000000000
+    Size.Width = 43.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+  end
+  object Edit2: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    Anchors = [akLeft, akBottom]
+    TabOrder = 7
+    CanParentFocus = True
+    Text = '5555'
+    Position.X = 232.000000000000000000
+    Position.Y = 524.000000000000000000
+    Size.Width = 41.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
   end
 end
