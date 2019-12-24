@@ -135,7 +135,6 @@ end;
 procedure TForm1.DoNeedUpdate;
 begin
   Layout1.Repaint;
-  for var C in Connections do
   if CompareConnections then
     Rectangle1.Fill.Color:=claGreen
   else
@@ -193,19 +192,22 @@ end;
 
 procedure TForm1.Layout1Paint(Sender: TObject; Canvas: TCanvas;
   const ARect: TRectF);
-var R: TRectF;
+var R,V: TRectF;
 begin
 
   R:=ARect;
   R.Height:=20;
+
+  V:=TRectF.Create(VertScrollBox1.ViewportPosition,VertScrollBox1.ClientWidth,VertScrollBox1.ClientHeight);
 
   Canvas.Fill.Color:=claBlack;
   Canvas.Fill.Kind:=TBrushKind.Solid;
 
   for var C in Connections do
   begin
-   Canvas.FillText(R,C.Content.ContentText,False,1,[],TTextAlign.Leading,TTextAlign.Center);
-   R.Offset(0,R.Height);
+    if V.IntersectsWith(R) then
+      Canvas.FillText(R,C.Content.ContentText,False,1,[],TTextAlign.Leading,TTextAlign.Center);
+    R.Offset(0,R.Height);
   end;
 
 end;
@@ -222,6 +224,7 @@ procedure TForm1.OnClientConnect(Sender: TObject);
 var Connection: TConnection;
 begin
   Connection:=GetConnection(Sender);
+//  Connection.Client.Send('Hello, Oleg!');
   if Connection.State=Connecting then Connection.State:=Connected;
   DoNeedUpdate;
 end;
