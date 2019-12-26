@@ -126,7 +126,7 @@ end;
 function TForm1.CompareConnections: Boolean;
 var S: string;
 begin
-  Result:=True;
+  Result:=True; Exit;
   if Connections.Count>0 then S:=Connections[0].Content.ContentText;
   for var C in Connections do
   if C.Content.ContentText<>S then Exit(False);
@@ -145,7 +145,7 @@ procedure TForm1.Button1Click(Sender: TObject);
 var I: Integer;
 begin
   //for I:=0 to 200 do AddConnection('185.182.193.15'); '190.2.154.76'
-  for I:=0 to StrToInt(Edit1.Text) do AddConnection(ComboEdit1.Text);
+  for I:=0 to StrToInt(Edit1.Text)-1 do AddConnection(ComboEdit1.Text);
   Layout1.Height:=Connections.Count*20;
   Label1.Text:=Connections.Count.ToString;
 end;
