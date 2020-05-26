@@ -1,0 +1,33 @@
+object NetworkForm: TNetworkForm
+  Left = 0
+  Top = 0
+  Caption = 'Network'
+  ClientHeight = 768
+  ClientWidth = 556
+  Fill.Kind = Solid
+  Position = ScreenCenter
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnDestroy = FormDestroy
+  DesignerMasterStyle = 0
+  object ScrollBox1: TScrollBox
+    Align = Client
+    Size.Width = 556.000000000000000000
+    Size.Height = 768.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    Viewport.Width = 556.000000000000000000
+    Viewport.Height = 768.000000000000000000
+    object Memo1: TRectangle
+      Fill.Kind = None
+      HitTest = False
+      Size.Width = 265.000000000000000000
+      Size.Height = 425.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Kind = None
+      Stroke.Thickness = 0.000000000000000000
+      OnPaint = Memo1Paint
+    end
+  end
+end

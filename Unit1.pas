@@ -23,29 +23,15 @@ uses
   UCustomMemoryStream,
   Net.Socket,
   Net.StreamSocket,
-  FMX.Objects, FMX.Edit, FMX.SearchBox,
+  FMX.Objects,
+  FMX.Edit,
+  FMX.SearchBox,
   FMX.DialogService,
-  Unit2;
+  Connection.Types,
+  Unit2,
+  Form.Network;
 
 type
-  TConnection = class
-  public type
-    TState = (None,Connecting,Connected,Excepted,Aborted,OK);
-  private
-    FState: TState;
-    procedure SetState(Value: TState);
-  public
-    Client: TStreamSocket;
-    ExceptionText: string;
-    Address: string;
-    NodeServer: string;
-    [weak]Content: TItemFrame;
-    constructor Create;
-    destructor Destroy; override;
-    procedure Connect;
-    property State: TState read FState write SetState;
-  end;
-
   TForm1 = class(TForm)
     ListBox: TListBox;
     Button1: TButton;
@@ -59,11 +45,8 @@ type
     Connections: TObjectList<TConnection>;
     procedure AddConnection(const Address: string);
     function GetConnection(Socket: TObject): TConnection;
-    procedure OnClientConnect(Sender: TObject);
-    procedure OnClientReceived(Sender: TObject);
-    procedure OnClientClose(Sender: TObject);
-    procedure OnClientExcept(Sender: TObject);
     procedure SaveConnections;
+    procedure OnItemClick(Sender: TObject);
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -75,43 +58,6 @@ var
 implementation
 
 {$R *.fmx}
-
-constructor TConnection.Create;
-begin
-  Client:=TStreamSocket.Create;
-end;
-
-destructor TConnection.Destroy;
-begin
-  Client.Terminate;
-  Client.Free;
-end;
-
-procedure TConnection.SetState(Value: TState);
-begin
-
-  FState:=Value;
-
-  case State of
-  None: Content.SetInformation('Unknown');
-  Connecting: Content.SetInformation('Connecting...');
-  Connected: Content.SetInformation('Connected (wait response...)');
-  Excepted: Content.SetException(ExceptionText);
-  Aborted: Content.SetInformation('Aborted');
-  OK: Content.SetOK(NodeServer);
-  end;
-
-end;
-
-procedure TConnection.Connect;
-begin
-  State:=Connecting;
-  ExceptionText:='';
-  NodeServer:='';
-  Client.Connect(Address,5555);
-end;
-
-{ TForm1 }
 
 procedure TForm1.SaveConnections;
 var
@@ -180,10 +126,6 @@ begin
 
   Connection:=TConnection.Create;
   Connection.Address:=Address;
-  Connection.Client.OnConnect:=OnClientConnect;
-  Connection.Client.OnReceived:=OnClientReceived;
-  Connection.Client.OnClose:=OnClientClose;
-  Connection.Client.OnExcept:=OnClientExcept;
 
   Item:=ListBox.ItemByIndex(ListBox.Items.Add(''));
   {$IFDEF MSWINDOWS}Item.Height:=36;{$ENDIF}
@@ -195,12 +137,20 @@ begin
   Content.TagObject:=Connection;
 
   Item.TagObject:=Content;
+  Item.OnClick:=OnItemClick;
 
   Connections.Add(Connection);
 
   Connection.Content:=Content;
   Connection.State:=None;
 
+end;
+
+procedure TForm1.OnItemClick(Sender: TObject);
+var Connection: TConnection;
+begin
+  Connection:=TConnection(TItemFrame(TFmxObject(Sender).TagObject).TagObject);
+  NetworkForm.Get(Connection.Address);
 end;
 
 constructor TForm1.Create(AOwner: TComponent);
@@ -238,60 +188,6 @@ destructor TForm1.Destroy;
 begin
   Connections.Free;
   inherited;
-end;
-
-procedure TForm1.OnClientClose(Sender: TObject);
-var Connection: TConnection;
-begin
-  Connection:=GetConnection(Sender);
-  if Connection.State=Connected then Connection.State:=Aborted;
-end;
-
-procedure TForm1.OnClientConnect(Sender: TObject);
-var Connection: TConnection;
-begin
-  Connection:=GetConnection(Sender);
-  if Connection.State=Connecting then Connection.State:=Connected;
-end;
-
-procedure TForm1.OnClientExcept(Sender: TObject);
-var Connection: TConnection;
-begin
-  Connection:=GetConnection(Sender);
-  Connection.ExceptionText:=Connection.Client.E.Message;
-  Connection.State:=Excepted;
-end;
-
-procedure TForm1.OnClientReceived(Sender: TObject);
-var
-  Packages: TPackagesList;
-  Package: TPackage;
-  Connection: TConnection;
-begin
-
-  Connection:=GetConnection(Sender);
-
-  Packages:=TPackagesList.Create;
-  try
-
-    Connection.Client.DataStream.StreamToList(Packages);
-
-    for Package in Packages do
-    case Package.typ of
-    701:
-    begin
-
-      Connection.NodeServer:=TEncoding.ANSI.GetString(TBytes(Package.obj));
-      Connection.State:=OK;
-      Connection.Client.Disconnect;
-
-    end;
-    end;
-
-  finally
-    Packages.Free;
-  end;
-
 end;
 
 end.
