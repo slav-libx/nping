@@ -9,6 +9,7 @@ uses
   System.UIConsts,
   System.Classes,
   System.Math,
+  System.DateUtils,
   System.Generics.Collections,
   System.Generics.Defaults,
   FMX.Types,
@@ -19,7 +20,9 @@ uses
   FMX.Controls.Presentation,
   FMX.ScrollBox,
   FMX.Memo,
-  Connection.Types, FMX.Objects, FMX.Layouts;
+  FMX.Objects,
+  FMX.Layouts,
+  Connection.Types;
 
 type
 
@@ -39,6 +42,9 @@ type
   private
     Connection: TConnection;
     Nodes: array of TDrawNode;
+    ServersCount: Integer;
+    ClientsCount: Integer;
+    ConnectionsCount: Integer;
     procedure OnLog(const Text: string);
     procedure OnNode(const Node: TNode);
     procedure RecalcNodes;
@@ -79,6 +85,12 @@ end;
 procedure TNetworkForm.Get(const Address: string);
 var Node: TDrawNode;
 begin
+
+  ServersCount:=0;
+  ClientsCount:=0;
+  ConnectionsCount:=0;
+
+  ScrollBox1.ViewportPosition:=TPointF.Zero;
 
   Node.Node:=Default(TNode);
   Node.Node.Address:='190.2.145.29';
@@ -136,16 +148,22 @@ begin
       RightAccountID:=Right.Node.AccountID;
       if RightAccountID=0 then RightAccountID:=MaxInt;
       Result:=CompareValue(LeftAccountID,RightAccountID);
+      if Result=0 then
+      Result:=CompareDateTime(Right.Node.AcceptTime,Left.Node.AcceptTime);
     end;
   end));
 
   Size:=TSizeF.Create(0,0);
 
-  R:=TRectF.Create(PointF(10,10),100,60);
+  R:=TRectF.Create(PointF(10,30),100,60);
+
+  ServersCount:=0;
 
   for I:=0 to High(Nodes) do
   if Nodes[I].Node.Binded then
   begin
+
+    Inc(ServersCount);
 
     if Nodes[I].Node.Address=Nodes[I].Node.Server then
       Nodes[I].FillColor:=NODE_SERVER
@@ -170,11 +188,14 @@ begin
 
   end;
 
-//  R:=TRectF.Create(PointF(130,10),100,60);
+  ClientsCount:=0;
+  ConnectionsCount:=0;
 
   for I:=0 to High(Nodes) do
   if not Nodes[I].Node.Binded then
   begin
+
+    Inc(ConnectionsCount);
 
     ServerIndex:=GetServerNode(Nodes[I].Node.Server);
 
@@ -183,6 +204,8 @@ begin
 
     Nodes[I].Rect:=R;
     Nodes[ServerIndex].Bottom:=R.Bottom;
+
+    if Nodes[I].Node.AccountID<>0 then Inc(ClientsCount);
 
     if Nodes[I].Node.AccountID<>0 then
       Nodes[I].FillColor:=GRAY_LOGIN
@@ -236,7 +259,7 @@ begin
 
   D.Top:=D.Top+12;
 
-  Canvas.FillText(D,Node.Node.AccountID.ToString,False,1,[],TTextAlign.Leading,TTextAlign.Leading);
+  Canvas.FillText(D,Node.Node.AccountID.ToString+'  '+Node.Node.GetOSName,False,1,[],TTextAlign.Leading,TTextAlign.Leading);
 
   D.Top:=D.Top+12;
   Canvas.Font.Size:=8;
@@ -248,9 +271,24 @@ end;
 procedure TNetworkForm.Memo1Paint(Sender: TObject; Canvas: TCanvas; const ARect: TRectF);
 var R: TRectF;
 begin
+
   R:=ScrollBox1.LocalRect;
   R.SetLocation(ScrollBox1.ViewportPosition);
+
   for var Node in Nodes do if R.IntersectsWith(Node.Rect) then DrawNode(Canvas,Node);
+
+  R:=ARect;
+  R.Top:=10;
+  R.Left:=10;
+
+  Canvas.Fill.Color:=clablack;
+  Canvas.Font.Size:=12;
+  Canvas.FillText(R,'Network: '+Connection.Network+
+    '  Clients: '+ClientsCount.ToString+
+    '  Total: '+ConnectionsCount.ToString+
+    '  Servers: '+ServersCount.ToString,
+    False,1,[],TTextAlign.Leading,TTextAlign.Leading);
+
 end;
 
 end.

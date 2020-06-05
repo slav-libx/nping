@@ -3,7 +3,7 @@ object Form1: TForm1
   Top = 0
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Nodes Monitor'
-  ClientHeight = 475
+  ClientHeight = 731
   ClientWidth = 358
   Position = ScreenCenter
   FormFactor.Width = 320
@@ -15,7 +15,7 @@ object Form1: TForm1
     Position.X = 8.000000000000000000
     Position.Y = 8.000000000000000000
     Size.Width = 341.000000000000000000
-    Size.Height = 419.000000000000000000
+    Size.Height = 675.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 0
     DisableFocusEffect = True
@@ -23,12 +23,12 @@ object Form1: TForm1
     DefaultItemStyles.GroupHeaderStyle = ''
     DefaultItemStyles.GroupFooterStyle = ''
     Viewport.Width = 337.000000000000000000
-    Viewport.Height = 415.000000000000000000
+    Viewport.Height = 671.000000000000000000
   end
   object Button1: TButton
     Anchors = [akRight, akBottom]
     Position.X = 244.000000000000000000
-    Position.Y = 428.000000000000000000
+    Position.Y = 684.000000000000000000
     Size.Width = 105.000000000000000000
     Size.Height = 40.000000000000000000
     Size.PlatformDefault = False
@@ -39,7 +39,7 @@ object Form1: TForm1
   object Button2: TButton
     Anchors = [akLeft, akBottom]
     Position.X = 8.000000000000000000
-    Position.Y = 428.000000000000000000
+    Position.Y = 684.000000000000000000
     Size.Width = 105.000000000000000000
     Size.Height = 40.000000000000000000
     Size.PlatformDefault = False
@@ -50,7 +50,7 @@ object Form1: TForm1
   object Button3: TButton
     Anchors = [akLeft, akBottom]
     Position.X = 113.000000000000000000
-    Position.Y = 428.000000000000000000
+    Position.Y = 684.000000000000000000
     Size.Width = 105.000000000000000000
     Size.Height = 40.000000000000000000
     Size.PlatformDefault = False

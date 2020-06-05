@@ -18,12 +18,14 @@ type
   TNode = record
     ID: Integer;
     AccountID: Int64;
+    OS: Integer;
     Address: string;
     Binded: Boolean;
     Server: string;
     AcceptTime: TDateTime;
     Connected: Boolean;
     class operator Implicit(const S: string): TNode;
+    function GetOSName: string;
   end;
 
   TNodeEvent = procedure(const Node: TNode) of object;
@@ -76,7 +78,7 @@ const
 class operator TNode.Implicit(const S: string): TNode;
 begin
 
-  var V:=(S+'::').Split([':']);
+  var V:=(S+':::').Split([':']);
 
   Result.ID:=StrToInt64Def(V[3],0);
   Result.AccountID:=StrToInt64Def(V[2],0);
@@ -84,6 +86,24 @@ begin
   Result.Binded:=V[1]='1';
   Result.Server:='';
   Result.AcceptTime:=UnixToDateTime(StrToInt64Def(V[4],0),False);
+  Result.OS:=StrToIntDef(V[5],0);
+
+end;
+
+function TNode.GetOSName: string;
+begin
+
+  Result:=OS.ToString;
+
+  case OS of
+  0: Result:='indef';
+  1: Result:='Windows';
+  2: Result:='MacOS';
+  3: Result:='iOS';
+  4: Result:='Android';
+  5: Result:='WinRT';
+  6: Result:='Linux';
+  end;
 
 end;
 
