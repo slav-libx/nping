@@ -40,6 +40,10 @@ type
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
+    procedure ListBoxDragChange(SourceItem, DestItem: TListBoxItem;
+      var Allow: Boolean);
+    procedure ListBoxMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Single);
   private
     ConnectionsFileName: string;
     Connections: TObjectList<TConnection>;
@@ -77,6 +81,22 @@ begin
   Result:=nil;
 end;
 
+procedure TForm1.ListBoxDragChange(SourceItem, DestItem: TListBoxItem;
+  var Allow: Boolean);
+begin
+//  Connections.Exchange(SourceItem.Index,DestItem.Index);
+//  SaveConnections;
+end;
+
+procedure TForm1.ListBoxMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Single);
+var ListItem: TListBoxItem;
+begin
+  ListItem:=ListBox.ItemByPoint(X,Y);
+//  BeginInternalDrag(ListItem,Rectangle1.Fill.Bitmap.Bitmap);
+  ListItem.Inflate;
+end;
+
 procedure TForm1.Button1Click(Sender: TObject);
 var C: TConnection;
 begin
@@ -91,7 +111,6 @@ end;
 procedure TForm1.Button2Click(Sender: TObject);
 begin
 
-  //TDialogService.InputQuery('Add Node Address',['111'],['222'],
   TDialogService.InputQuery('Add Node Address',{$IFDEF MSWINDOWS}['Address']{$ELSE}['']{$ENDIF},[''],
   procedure(const AResult: TModalResult; const AValues: array of string)
   var S: string;
@@ -109,10 +128,16 @@ end;
 procedure TForm1.Button3Click(Sender: TObject);
 begin
   if Assigned(ListBox.Selected) then
+  TDialogService.MessageDialog('Remove Item?',TMsgDlgType.mtWarning,
+    [TMsgDlgBtn.mbCancel,TMsgDlgBtn.mbOK],TMsgDlgBtn.mbOK,0,
+  procedure(const AResult: TModalResult)
   begin
-    ListBox.Items.Delete(Connections.Remove(TItemFrame(ListBox.Selected.TagObject).TagObject as TConnection));
-    SaveConnections;
-  end;
+    if AResult=mrOk then
+    begin
+      ListBox.Items.Delete(Connections.Remove(TItemFrame(ListBox.Selected.TagObject).TagObject as TConnection));
+      SaveConnections;
+    end;
+  end);
 end;
 
 procedure TForm1.AddConnection(const Address: string);
@@ -149,8 +174,11 @@ end;
 procedure TForm1.OnItemClick(Sender: TObject);
 var Connection: TConnection;
 begin
-  Connection:=TConnection(TItemFrame(TFmxObject(Sender).TagObject).TagObject);
-  NetworkForm.Get(Connection.Address);
+  if not ListBox.AniCalculations.Moved then
+  begin
+    Connection:=TConnection(TItemFrame(TFmxObject(Sender).TagObject).TagObject);
+    NetworkForm.Get(Connection.Address);
+  end;
 end;
 
 constructor TForm1.Create(AOwner: TComponent);

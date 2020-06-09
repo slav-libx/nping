@@ -9,6 +9,7 @@ object NetworkForm: TNetworkForm
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
   OnDestroy = FormDestroy
   DesignerMasterStyle = 0
   object ScrollBox1: TScrollBox

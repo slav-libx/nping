@@ -39,8 +39,10 @@ type
     Memo1: TRectangle;
     procedure FormDestroy(Sender: TObject);
     procedure Memo1Paint(Sender: TObject; Canvas: TCanvas; const ARect: TRectF);
+    procedure FormCreate(Sender: TObject);
   private
     Connection: TConnection;
+    RootNode: TDrawNode;
     Nodes: array of TDrawNode;
     ServersCount: Integer;
     ClientsCount: Integer;
@@ -59,6 +61,22 @@ var
 implementation
 
 {$R *.fmx}
+
+const
+  NODE_SERVER = $FFDEFAD5;
+  NODE_LOGIN = $FFF3FCC4;
+  NODE_GRAY = $FFECECEC;
+  GRAY_LOGIN = $FFD1EFFE;
+  NODE_CONNECTED = claBlack;
+  NODE_DISCONNECTED = claRed;
+
+procedure TNetworkForm.FormCreate(Sender: TObject);
+begin
+  Connection:=TConnection.Create;
+  Connection.RequestNetworks:=True;
+//  Connection.OnLog:=OnLog;
+  Connection.OnNode:=OnNode;
+end;
 
 procedure TNetworkForm.FormDestroy(Sender: TObject);
 begin
@@ -83,7 +101,6 @@ begin
 end;
 
 procedure TNetworkForm.Get(const Address: string);
-var Node: TDrawNode;
 begin
 
   ServersCount:=0;
@@ -92,30 +109,21 @@ begin
 
   ScrollBox1.ViewportPosition:=TPointF.Zero;
 
-  Node.Node:=Default(TNode);
-  Node.Node.Address:='190.2.145.29';
-  Node.Node.Binded:=True;
+  RootNode:=Default(TDrawNode);
+  RootNode.FillColor:=NODE_LOGIN;
+  RootNode.StrokeColor:=NODE_CONNECTED;
+  RootNode.Node.Address:=Address;
+  RootNode.Node.Binded:=True;
+  RootNode.Node.Connected:=True;
 
-//  Memo1.Text:='';
-  Nodes:=nil;//[Node];
+  Nodes:=nil;
 
-  Connection.Free;
-  Connection:=TConnection.Create;
-  Connection.RequestNetworks:=True;
-//  Connection.OnLog:=OnLog;
-  Connection.OnNode:=OnNode;
   Connection.Address:=Address;
   Connection.Connect;
 
   Show;
 
 end;
-
-const
-  NODE_SERVER = $FFDEFAD5;
-  NODE_LOGIN = $FFF3FCC4;
-  NODE_GRAY = $FFECECEC;
-  GRAY_LOGIN = $FFD1EFFE;
 
 procedure TNetworkForm.RecalcNodes;
 
@@ -157,6 +165,9 @@ begin
 
   R:=TRectF.Create(PointF(10,30),100,60);
 
+  RootNode.Rect:=R;
+  RootNode.Bottom:=RootNode.Rect.Bottom;
+
   ServersCount:=0;
 
   for I:=0 to High(Nodes) do
@@ -174,9 +185,9 @@ begin
       Nodes[I].FillColor:=NODE_GRAY;
 
     if Nodes[I].Node.Connected then
-      Nodes[I].StrokeColor:=claBlack
+      Nodes[I].StrokeColor:=NODE_CONNECTED
     else
-      Nodes[I].StrokeColor:=claRed;
+      Nodes[I].StrokeColor:=NODE_DISCONNECTED;
 
     Nodes[I].Rect:=R;
     Nodes[I].Bottom:=Nodes[I].Rect.Bottom;
@@ -199,11 +210,18 @@ begin
 
     ServerIndex:=GetServerNode(Nodes[I].Node.Server);
 
-    R:=Nodes[ServerIndex].Rect;
-    R.SetLocation(R.Left,Nodes[ServerIndex].Bottom+10);
+    if ServerIndex=-1 then
+    begin
+      R:=RootNode.Rect;
+      R.SetLocation(R.Left,RootNode.Bottom+10);
+      RootNode.Bottom:=R.Bottom;
+    end else begin
+      R:=Nodes[ServerIndex].Rect;
+      R.SetLocation(R.Left,Nodes[ServerIndex].Bottom+10);
+      Nodes[ServerIndex].Bottom:=R.Bottom;
+    end;
 
     Nodes[I].Rect:=R;
-    Nodes[ServerIndex].Bottom:=R.Bottom;
 
     if Nodes[I].Node.AccountID<>0 then Inc(ClientsCount);
 
@@ -213,9 +231,9 @@ begin
       Nodes[I].FillColor:=NODE_GRAY;
 
     if Nodes[I].Node.Connected then
-      Nodes[I].StrokeColor:=claBlack
+      Nodes[I].StrokeColor:=NODE_CONNECTED
     else
-      Nodes[I].StrokeColor:=claRed;
+      Nodes[I].StrokeColor:=NODE_DISCONNECTED;
 
     Nodes[I].Rect:=R;
 
@@ -223,6 +241,8 @@ begin
     Size.cy:=Max(Size.cy,R.Bottom+10);
 
   end;
+
+  Size.cx:=Max(Size.cx,ScrollBox1.ClientWidth);
 
   Memo1.Size.Size:=Size;
 
@@ -257,6 +277,8 @@ begin
 
   Canvas.FillText(D,Node.Node.Server,False,1,[],TTextAlign.Leading,TTextAlign.Leading);
 
+  if Node.Node.AcceptTime=0 then Exit;
+
   D.Top:=D.Top+12;
 
   Canvas.FillText(D,Node.Node.AccountID.ToString+'  '+Node.Node.GetOSName,False,1,[],TTextAlign.Leading,TTextAlign.Leading);
@@ -274,6 +296,8 @@ begin
 
   R:=ScrollBox1.LocalRect;
   R.SetLocation(ScrollBox1.ViewportPosition);
+
+  if ServersCount=0 then DrawNode(Canvas,RootNode);
 
   for var Node in Nodes do if R.IntersectsWith(Node.Rect) then DrawNode(Canvas,Node);
 
